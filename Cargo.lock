@@ -1,0 +1,12 @@
+[root]
+name = "geneticrust"
+version = "0.0.1"
+dependencies = [
+ "sqlite3 0.1.0 (git+https://github.com/linuxfood/rustsqlite.git#43bf4081ce670f92db150f9c9bb39c24658072c9)",
+]
+
+[[package]]
+name = "sqlite3"
+version = "0.1.0"
+source = "git+https://github.com/linuxfood/rustsqlite.git#43bf4081ce670f92db150f9c9bb39c24658072c9"
+

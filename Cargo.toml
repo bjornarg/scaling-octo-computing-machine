@@ -1,0 +1,9 @@
+[package]
+
+name = "geneticrust"
+version = "0.0.1"
+authors = ["Bjørnar Grip Fjær <bjornar.fjar@gmail.com>"]
+
+[dependencies.sqlite3]
+
+git = "https://github.com/linuxfood/rustsqlite.git"
