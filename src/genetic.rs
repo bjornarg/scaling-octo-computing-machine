@@ -3,7 +3,7 @@ use std::rand::{task_rng, Rng};
 use dna;
 use log;
 
-static POPULATION_SIZE: uint = 50u;
+static POPULATION_SIZE: uint = 20u;
 
 /// Used to keep track of the fitness of a given DNA and sorting them by
 /// fitness to aquire a new generation.
@@ -43,16 +43,21 @@ impl PartialOrd for DNAPair {
     }
 }
 
+
+/// Calculates the distance a given DNA would give for a given sample.
 pub fn calculate_distance(individual: &dna::DNA, log: &log::Log) -> f64 {
-    let ratio = individual.get_ratio_factor() * log.rssi as f64 / log.txPower as f64;
+    let ratio = individual.get_ratio_factor() * log.rssi as f64 / log.tx_power as f64;
     let ratio_powered = ratio.powf(individual.get_power());
     individual.get_factor() * ratio_powered + individual.get_constant()
 }
 
+/// Generates a new random population.
 pub fn generate_population() -> Vec<dna::DNA> {
-    Vec::from_fn(POPULATION_SIZE, |x| dna::DNA::new())
+    Vec::from_fn(POPULATION_SIZE, |_| dna::DNA::new())
 }
 
+
+/// Progress a generation to a new generation.
 pub fn new_generation(population: &Vec<dna::DNA>, logs: &Vec<log::Log>) -> Vec<dna::DNA> {
     let mut new_population = Vec::new();
     let mut fitness_evaluation = Vec::new();
@@ -67,7 +72,7 @@ pub fn new_generation(population: &Vec<dna::DNA>, logs: &Vec<log::Log>) -> Vec<d
     fitness_evaluation.sort();
     normalize_generation(&mut fitness_evaluation);
     new_population.push(population[fitness_evaluation[0].position]);
-    for i in range(0, POPULATION_SIZE-1) {
+    for _ in range(0, POPULATION_SIZE-1) {
         let first_parent = population[get_parent(&fitness_evaluation)];
         let second_parent = population[get_parent(&fitness_evaluation)];
         new_population.push(first_parent.crossover(second_parent).mutate());
@@ -75,6 +80,8 @@ pub fn new_generation(population: &Vec<dna::DNA>, logs: &Vec<log::Log>) -> Vec<d
     new_population
 }
 
+/// Get a a parent for a new generation, with the probability of being
+/// chosen based on each individuals fitness.
 fn get_parent(fitness_evaluation: &Vec<DNAPair>) -> uint {
     let mut rng = task_rng();
     let mut parent_chance: f64 = rng.gen_range(0.0, 1.0);
@@ -88,6 +95,9 @@ fn get_parent(fitness_evaluation: &Vec<DNAPair>) -> uint {
     POPULATION_SIZE - 1
 }
 
+/// Calculate the fitness of an individual based on the total difference
+/// between calculated distance and actual distance.
+/// The lower the fitness, the better.
 pub fn calculate_fitness(individual: &dna::DNA, logs: &Vec<log::Log>) -> f64 {
     let mut fitness = 0f64;
     for log_item in logs.iter() {
@@ -98,6 +108,9 @@ pub fn calculate_fitness(individual: &dna::DNA, logs: &Vec<log::Log>) -> f64 {
     fitness
 }
 
+/// Normalize a generation's fitness and invert it, giving a higher
+/// fitness to individuals with lower total difference in distance
+/// calculations.
 fn normalize_generation(fitness_evaluation: &mut Vec<DNAPair>) {
     if fitness_evaluation.len() == 0 {
         return;
@@ -106,9 +119,7 @@ fn normalize_generation(fitness_evaluation: &mut Vec<DNAPair>) {
     for pair in fitness_evaluation.iter() {
         total_fitness += pair.fitness;
     }
-    let mut sum_eval = 0f64;
     for pair in fitness_evaluation.iter_mut() {
         pair.fitness = (total_fitness-pair.fitness)/total_fitness/(POPULATION_SIZE as f64-1f64);
-        sum_eval += pair.fitness;
     }
 }

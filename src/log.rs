@@ -4,9 +4,9 @@ use sqlite3::types::*;
 
 pub struct Log {
     pub rssi: int,
-    pub txPower: int,
+    pub tx_power: int,
     pub distance: f64,
-    pub macAddress: String,
+    pub mac_address: String,
 }
 
 pub fn get_logs(db_file: &str) -> Option<Vec<Log>> {
@@ -39,9 +39,9 @@ pub fn get_logs(db_file: &str) -> Option<Vec<Log>> {
         }
         logs.push(Log{
             rssi: cursor.get_int(0),
-            txPower: cursor.get_int(1),
+            tx_power: cursor.get_int(1),
             distance: cursor.get_f64(2),
-            macAddress: match cursor.get_text(3) {
+            mac_address: match cursor.get_text(3) {
                 Some(n) => String::from_str(n),
                 None => String::new(),
             }
