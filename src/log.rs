@@ -9,13 +9,13 @@ pub struct Log {
     pub macAddress: String,
 }
 
-pub fn get_logs(db_file: &str) -> SqliteResult<Vec<Log>> {
+pub fn get_logs(db_file: &str) -> Option<Vec<Log>> {
     let mut logs = Vec::new();
     let db: sqlite3::Database = match sqlite3::open(db_file) {
         Ok(db) => db,
         Err(id) => {
             println!("Could not open database error: {}", id);
-            return Err(id);
+            return None;
         }
     };
     println!("Opened database '{}'", db_file);
@@ -27,7 +27,7 @@ pub fn get_logs(db_file: &str) -> SqliteResult<Vec<Log>> {
         Err(id) => {
             println!("Could not create cursor, error: {}", id);
             println!("Error: {}", db.get_errmsg());
-            return Err(id);
+            return None;
         }
     };
 
@@ -43,10 +43,10 @@ pub fn get_logs(db_file: &str) -> SqliteResult<Vec<Log>> {
             distance: cursor.get_f64(2),
             macAddress: match cursor.get_text(3) {
                 Some(n) => String::from_str(n),
-                None => String::new()
+                None => String::new(),
             }
         });
     }
 
-    Ok(logs)
+    Some(logs)
 }
