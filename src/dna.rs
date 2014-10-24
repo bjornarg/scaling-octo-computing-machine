@@ -1,9 +1,9 @@
 use std::rand::{task_rng, Rng};
 use std::fmt;
 
-static MIN_RANGE: f64 = -5f64;
-static MAX_RANGE: f64 = 5f64;
-static MUTATION_RATE: f64 = 0.1f64;
+static MIN_RANGE: f64 = -50f64;
+static MAX_RANGE: f64 = 50f64;
+static MUTATION_RATE: f64 = 0.2f64;
 
 pub struct DNA {
     dna: [f64, ..4],
@@ -73,7 +73,7 @@ impl DNA {
 
 impl fmt::Show for DNA {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "DNA (Power: {} - Constant: {} - Factor: {} - Ratio factor: {})", self.dna[0], self.dna[1], self.dna[2], self.dna[3])
+        write!(f, "{{power: {}, constant: {}, factor: {}, ratio_factor: {}}}", self.dna[0], self.dna[1], self.dna[2], self.dna[3])
     }
 }
 
