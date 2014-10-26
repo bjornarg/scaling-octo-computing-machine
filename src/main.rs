@@ -19,9 +19,8 @@ fn main() {
     for i in range(0i, 1000000i) {
         population = genetic::new_generation(&population, &logs);
         if fittest != population[0] {
-            let total_distance = genetic::calculate_fitness(&population[0], &logs);
-            println!("{}: {} - Distance: {} ({} avg)", i, fittest, total_distance, total_distance / logs.len() as f64);
             fittest = population[0];
+            println!("{{\"power\": {}, \"constant\": {}, \"factor\": {}, \"ratio_factor\": {}, \"generation\": {}}}", fittest.get_power(), fittest.get_constant(), fittest.get_factor(), fittest.get_ratio_factor(), i)
         }
     }
 }
