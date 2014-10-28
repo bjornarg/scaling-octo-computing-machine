@@ -6,7 +6,7 @@ static MAX_RANGE: f64 = 50f64;
 static MUTATION_RATE: f64 = 0.2f64;
 
 pub struct DNA {
-    dna: [f64, ..4],
+    dna: [f64, ..5],
 }
 
 impl DNA {
@@ -19,6 +19,8 @@ impl DNA {
             if rng.gen_range(0f64, 1f64) < MUTATION_RATE {
                 if i == 3 {
                     new_dna.dna[i] = rng.gen_range(0f64, MAX_RANGE);
+                } else if i == 5 {
+                    new_dna.dna[i] = rng.gen_range(0f64, 1f64);
                 } else {
                     new_dna.dna[i] = rng.gen_range(MIN_RANGE, MAX_RANGE);
                 }
@@ -50,7 +52,8 @@ impl DNA {
             rng.gen_range(MIN_RANGE, MAX_RANGE),
             rng.gen_range(MIN_RANGE, MAX_RANGE),
             rng.gen_range(MIN_RANGE, MAX_RANGE),
-            rng.gen_range(0f64, MAX_RANGE)];
+            rng.gen_range(0f64, MAX_RANGE),
+            rng.gen_range(0f64, 1f64)];
         DNA {dna: random_values}
     }
 
@@ -69,11 +72,16 @@ impl DNA {
     pub fn get_ratio_factor(&self) -> f64 {
         self.dna[3]
     }
+
+    pub fn get_smoothing_factor(&self) -> f64 {
+        self.dna[4]
+    }
 }
 
 impl fmt::Show for DNA {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{{\"power\": {}, \"constant\": {}, \"factor\": {}, \"ratio_factor\": {}}}", self.dna[0], self.dna[1], self.dna[2], self.dna[3])
+        write!(f, "{{\"power\": {}, \"constant\": {}, \"factor\": {}, \"ratio_factor\": {}, \"avg_decay\": {}}}",
+               self.dna[0], self.dna[1], self.dna[2], self.dna[3], self.dna[4])
     }
 }
 
