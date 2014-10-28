@@ -1,9 +1,11 @@
 use std::rand::{task_rng, Rng};
+use std::cmp::max;
 
 use dna;
 use log;
 
 static POPULATION_SIZE: uint = 20u;
+static AVERAGING_SIZE: uint = 5u;
 
 /// Used to keep track of the fitness of a given DNA and sorting them by
 /// fitness to aquire a new generation.
@@ -12,9 +14,11 @@ struct DNAPair {
     fitness: f64,
 }
 
+/// Implemented to show that our PartialEq is reflexive.
 impl Eq for DNAPair {
 }
 
+/// Equality is based on the fitness element.
 impl PartialEq for DNAPair {
     fn eq(&self, other: &DNAPair) -> bool {
         self.fitness == other.fitness
@@ -50,6 +54,10 @@ pub fn calculate_distance(individual: &dna::DNA, log: &log::Log) -> f64 {
     let ratio_powered = ratio.powf(individual.get_power());
     individual.get_factor() * ratio_powered + individual.get_constant()
 }
+
+//fn calculate_average(individual: &dna::DNA, logs: &Vec<log::Log>) -> f64 {
+//
+//}
 
 /// Generates a new random population.
 pub fn generate_population() -> Vec<dna::DNA> {
@@ -106,6 +114,14 @@ pub fn calculate_fitness(individual: &dna::DNA, logs: &Vec<log::Log>) -> f64 {
         fitness += difference;
     }
     fitness
+}
+
+fn averaging_fitness(individual: &dna::DNA, logs: &Vec<log::Log>, averaging_size: uint) -> f64 {
+    let mut fitness = 0f64;
+    for i in range(0u, logs.len()) {
+        let avg: uint = max(i, averaging_size);
+    }
+    0f64
 }
 
 /// Normalize a generation's fitness and invert it, giving a higher
