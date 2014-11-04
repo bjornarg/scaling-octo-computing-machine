@@ -18,7 +18,6 @@ pub fn get_logs(db_file: &str) -> Option<Vec<Log>> {
             return None;
         }
     };
-    println!("Opened database '{}'", db_file);
 
     let option = None;
 
